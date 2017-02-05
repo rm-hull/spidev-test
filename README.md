@@ -9,8 +9,8 @@ A copy of https://github.com/torvalds/linux/blob/master/tools/spi/spidev_test.c
 
 ## What is this for?
 
-If you are experiencing issues with the [SPI](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus) 
-bus on Raspberry Pi or other Linux-based single-board computers, this program 
+If you are experiencing issues with the [SPI](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus)
+bus on Raspberry Pi or other Linux-based single-board computers, this program
 (plus a single jumper or wire) will confirm whether SPI is working properly.
 
 ## Building on Raspberry Pi / Orange Pi
@@ -21,18 +21,42 @@ Download the code from github and compile with:
     $ cd spidev-test
     $ gcc spidev_test.c -o spidev_test
 
-## Usage
+## Enabling SPI on the Raspberry Pi
 
-First make sure `/dev/spidev0.0` is available, and that you have access to the SPI
-bus:
+By default, the SPI kernel driver is **NOT** enabled on the Raspberry Pi Raspian image.
+You can confirm whether it is enabled using the shell commands below::
 
-    $ ls -l /dev/spidev*
-    crw------- 1 root root 153, 0 Feb  5 14:25 /dev/spidev0.0
-    crw------- 1 root root 153, 1 Feb  5 14:25 /dev/spidev1.0
+    $ lsmod | grep -i spi
+    spi_bcm2835             7424  0
 
-    $ sudo usermod -a -g spi `whoami`
+Depending on the hardware/kernel version, this may report **spi_bcm2807** rather
+than **spi_bcm2835** - either should be adequate.
 
-Logout (or reboot) and login to establish the group membership.
+Check whether the devices are successfully installed in `/dev`:
+
+    $ ls -l /dev/spi*
+    crw------- 1 root root 153, 0 Jan  1  1970 /dev/spidev0.0
+    crw------- 1 root root 153, 1 Jan  1  1970 /dev/spidev0.1
+
+If you have no `/dev/spi` files and nothing is showing using `lsmod` then this
+implies the kernel SPI driver is not loaded. Enable the SPI as follows (steps
+taken from https://learn.sparkfun.com/tutorials/raspberry-pi-spi-and-i2c-tutorial#spi-on-pi):
+
+  1. Run `sudo raspi-config`
+  2. Use the down arrow to select `9 Advanced Options`
+  3. Arrow down to `A6 SPI.`
+  4. Select **yes** when it asks you to enable SPI,
+  5. Also select **yes** when it asks about automatically loading the kernel module.
+  6. Use the right arrow to select the **<Finish>** button.
+  7. Select **yes** when it asks to reboot.
+
+![raspi-config](https://raw.githubusercontent.com/rm-hull/luma.led_matrix/master/doc/images/raspi-spi.png)
+
+After rebooting re-check that the `lsmod | grep -i spi` command shows whether
+SPI driver is loaded before proceeding. If you are stil experiencing problems, refer to the official
+Raspberry Pi [SPI troubleshooting guide](https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md#troubleshooting)
+
+## Testing the SPI bus
 
 On RPi and other pin-compatible boards, connect pin 19 (BCM 10 = MOSI) to
 pin 21 (BCM 9 = MISO) to form a loopback connection. See https://pinout.xyz
@@ -51,8 +75,8 @@ _(run with `sudo` if it shows an error about permissions)_
 
 ## Interpretting the results
 
-With the MOSI _(master out, slave in)_ pin connected to the MISO _(master in, 
-slave out)_, the received data should be exactly the same as the transmitted data, 
+With the MOSI _(master out, slave in)_ pin connected to the MISO _(master in,
+slave out)_, the received data should be exactly the same as the transmitted data,
 as in the above example.
 
 If received data is all zero as below:
