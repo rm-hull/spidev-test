@@ -9,9 +9,9 @@ A copy of https://github.com/torvalds/linux/blob/master/tools/spi/spidev_test.c
 
 ## What is this for?
 
-If you are experiencing issues with the SPI interface on Raspberry Pi or other
-Linux-based single-board computers, this program (plus a single jumper or wire)
-will confirm whether SPI is working properly.
+If you are experiencing issues with the [SPI](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus) 
+bus on Raspberry Pi or other Linux-based single-board computers, this program 
+(plus a single jumper or wire) will confirm whether SPI is working properly.
 
 ## Building on Raspberry Pi / Orange Pi
 
@@ -55,7 +55,7 @@ TODO
 
 ## Program Options
 
-Use the _-?_ flag to show all the available options:
+Use the `-?` flag to show all the available options:
 
     $ ./spidev_test -?
     usage: ./spidev_test [-DsbdlHOLC3]
