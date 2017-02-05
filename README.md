@@ -45,15 +45,28 @@ Run the compiled executable:
     bits per word: 8
     max speed: 500000 Hz (500 KHz)
     TX | FF FF FF FF FF FF 40 00 00 00 00 95 FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF F0 0D  | ......@....?..................?.
-    RX | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  | ................................
+    RX | FF FF FF FF FF FF 40 00 00 00 00 95 FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF F0 0D  | ......@....?..................?.
 
 _(run with `sudo` if it shows an error about permissions)_
 
 ## Interpretting the results
 
-TODO
+With the MOSI _(master out, slave in)_ pin connected to the MISO _(master in, 
+slave out)_, the received data should be exactly the same as the transmitted data, 
+as in the above example.
 
-## Program Options
+If received data is all zero as below:
+
+    $ ./spidev_test -v
+    spi mode: 0x0
+    bits per word: 8
+    max speed: 500000 Hz (500 KHz)
+    TX | FF FF FF FF FF FF 40 00 00 00 00 95 FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF FF F0 0D  | ......@....?..................?.
+    RX | 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  | ................................
+
+This implies the pins MOSI and MISO aren't connected.
+
+## Program options
 
 Use the `-?` flag to show all the available options:
 
