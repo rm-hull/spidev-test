@@ -85,7 +85,7 @@ static void hex_dump(const void *src, size_t length, size_t line_size,
  *  Unescape - process hexadecimal escape character
  *      converts shell input "\x23" -> 0x23
  */
-static int unescape(char *_dst, char *_src, size_t len)
+static int unescape(char *_dst, char *_src)
 {
 	int ret = 0;
 	int match;
@@ -297,7 +297,7 @@ static void transfer_escaped_string(int fd, char *str)
 	if (!rx)
 		pabort("can't allocate rx buffer");
 
-	size = unescape((char *)tx, str, size);
+	size = unescape((char *)tx, str);
 	transfer(fd, tx, rx, size);
 	free(rx);
 	free(tx);
